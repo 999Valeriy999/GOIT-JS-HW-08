@@ -63,3 +63,71 @@ const images = [
     description: "Lighthouse Coast Sea",
   },
 ];
+
+const gallery = document.querySelector(".gallery");
+let currentLightboxInstance = null;
+
+// Відмальовка галереї, додаємо элементи галереї на основе масива зображень
+
+function createGalleryItem({ preview, original, description }) {
+  const galleryItemHTML = `
+    <li class="gallery-item">
+      <a class="gallery-link" href="${original}">
+        <img class="gallery-image"
+        src="${preview}" 
+        data-source="${original}" 
+        alt="${description}">
+      </a>
+    </li>
+  `;
+
+  const galleryItem = document.createElement("li");
+  galleryItem.insertAdjacentHTML("beforeend", galleryItemHTML);
+  return galleryItem;
+}
+
+// Додаємо усі элементи галереї в ul.gallery
+
+function renderGallery(images) {
+  const galleryItems = images.map(createGalleryItem);
+  gallery.append(...galleryItems);
+}
+
+renderGallery(images);
+
+// Додаємо делегування подій для відкриття модального вікна
+gallery.addEventListener("click", handleGalleryClick);
+
+function handleGalleryClick(event) {
+  event.preventDefault();
+
+  const { target } = event;
+  if (target.classList.contains("gallery-image")) {
+    const largeImageSrc = target.dataset.source;
+
+    // Використовуэмо basicLightbox для створення модального вікна
+
+    currentLightboxInstance = basicLightbox.create(
+      `
+      <img src="${largeImageSrc}" alt="Large Image">
+    `,
+      {
+        onShow: () => {
+          document.addEventListener("keydown", handleKeyDown);
+        },
+        onClose: () => {
+          document.removeEventListener("keydown", handleKeyDown);
+        },
+      }
+    );
+    currentLightboxInstance.show();
+  }
+}
+
+//Функція для обробки натискання клавіші "Escape"
+
+function handleKeyDown(event) {
+  if (event.key === "Escape") {
+    currentLightboxInstance.close();
+  }
+}
