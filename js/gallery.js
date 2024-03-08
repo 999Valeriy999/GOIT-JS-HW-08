@@ -65,20 +65,21 @@ const images = [
 ];
 
 const gallery = document.querySelector(".gallery");
+const galleryItemHTML = document.querySelector(".gallery-item");
 let currentLightboxInstance = null;
 
-// Відмальовка галереї, додаємо элементи галереї на основе масива зображень
+// Відмальовка галереї, додаємо элементи галереї на основі масива зображень
 
 function createGalleryItem({ preview, original, description }) {
   const galleryItemHTML = `
-    <li class="gallery-item">
+    
       <a class="gallery-link" href="${original}">
         <img class="gallery-image"
         src="${preview}" 
         data-source="${original}" 
         alt="${description}">
       </a>
-    </li>
+   
   `;
 
   const galleryItem = document.createElement("li");
